@@ -11,5 +11,6 @@ Files:
  examples/**.rs
  README.md
  src/**.rs
+ udev/*.rules
 Copyright: Avetos Design
 License: MIT
