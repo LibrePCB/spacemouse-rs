@@ -31,7 +31,7 @@ const READ_BUF_LEN: usize = 64;
 /// Owns the HID context and at most one open device. Nothing runs in the
 /// background: the caller scans for a device with [`SpaceMouse::connect`],
 /// reads events with [`SpaceMouse::read`], and sets the LED with
-/// [`SpaceMouse::set_led`]. See [`SpaceMouseLoop`](crate::SpaceMouseLoop)
+/// [`SpaceMouse::set_led`]. See [`SpaceMouseThread`](crate::SpaceMouseThread)
 /// for a layer which does this on a background thread.
 pub struct SpaceMouse {
   /// The open device, if any. Declared before `api` so it is dropped first.

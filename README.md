@@ -15,12 +15,12 @@ any application.
 ## Usage
 
 The crate offers two layers: `SpaceMouse` gives synchronous access to a device
-(scan for and open it, read events, set its LED), and `SpaceMouseLoop` runs it
+(scan for and open it, read events, set its LED), and `SpaceMouseThread` runs it
 on a background thread and delivers events to a callback, reconnecting
 automatically. See the `examples` directory:
 
-    cargo run --example print_events
-    cargo run --example print_events_sync
+    cargo run --example synchronous
+    cargo run --example threaded
 
 ## Why `hidapi`
 

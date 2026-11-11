@@ -1,4 +1,4 @@
-//! Background capture loop running a [`SpaceMouse`] on its own thread.
+//! Background capture thread running a [`SpaceMouse`].
 
 use crate::event::SpaceMouseEvent;
 use crate::spacemouse::SpaceMouse;
@@ -19,38 +19,38 @@ const MIN_RESCAN_INTERVAL: Duration = Duration::from_millis(100);
 /// busy-looping the background thread when the device is idle.
 const READ_TIMEOUT: Duration = Duration::from_millis(200);
 
-/// Request sent from a [`SpaceMouseLoop`] handle to its background thread.
+/// Request sent from a [`SpaceMouseThread`] handle to its background thread.
 enum Command {
   /// Set whether the device's LED is lit.
   SetLed(bool),
-  /// Stop the loop.
+  /// Stop the thread.
   Stop,
 }
 
-/// Cross-platform SpaceMouse HID capture loop.
+/// Cross-platform SpaceMouse HID capture thread.
 ///
-/// Handle to a loop running on a background thread, which continuously
+/// Handle to a background thread, which continuously
 /// (re-)discovers a compatible device, reads its raw HID reports, and
 /// forwards the resulting [`SpaceMouseEvent`]s to the callback given to
-/// [`SpaceMouseLoop::new`]. The loop stops when the handle is dropped.
+/// [`SpaceMouseThread::new`]. The thread stops when the handle is dropped.
 /// Constructing one is a safe no-op on a machine without a compatible device
 /// connected. A device that is plugged in later, or unplugged and replugged,
 /// is picked up automatically. If the HID subsystem cannot be initialized,
-/// the loop ends immediately and reports nothing.
-pub struct SpaceMouseLoop {
+/// the thread ends immediately and reports nothing.
+pub struct SpaceMouseThread {
   /// Whether a compatible device is currently open. Kept outside the
-  /// thread so [`SpaceMouseLoop::is_connected`] doesn't have to
+  /// thread so [`SpaceMouseThread::is_connected`] doesn't have to
   /// synchronize with it via the callback.
   connected: Arc<AtomicBool>,
   /// Sends requests into the background thread - see
-  /// [`SpaceMouseLoop::set_led`] and [`Drop::drop`].
+  /// [`SpaceMouseThread::set_led`] and [`Drop::drop`].
   command_sender: mpsc::Sender<Command>,
   /// The background thread, joined on drop. Always `Some` until
   /// [`Drop::drop`] runs.
   thread: Option<thread::JoinHandle<()>>,
 }
 
-impl SpaceMouseLoop {
+impl SpaceMouseThread {
   /// Start capturing in a new background thread.
   ///
   /// `on_event` is invoked on the background thread, *not* the caller's
@@ -58,7 +58,7 @@ impl SpaceMouseLoop {
   /// specific thread are responsible for the hop themselves.
   ///
   /// Waits between scans (while no compatible device is open) using the
-  /// default scan interval. See [`SpaceMouseLoop::with_rescan_interval`]
+  /// default scan interval. See [`SpaceMouseThread::with_rescan_interval`]
   /// for a configurable scan period.
   pub fn new<F>(on_event: F) -> Self
   where
@@ -67,7 +67,7 @@ impl SpaceMouseLoop {
     Self::with_rescan_interval(DEFAULT_RESCAN_INTERVAL, on_event)
   }
 
-  /// Like [`SpaceMouseLoop::new`], but waits `rescan_interval` between scans
+  /// Like [`SpaceMouseThread::new`], but waits `rescan_interval` between scans
   /// while no compatible device is open.
   ///
   /// Shorter intervals pick up a newly connected device sooner, at the cost
@@ -107,7 +107,7 @@ impl SpaceMouseLoop {
   }
 }
 
-impl Drop for SpaceMouseLoop {
+impl Drop for SpaceMouseThread {
   fn drop(&mut self) {
     // Send only fails if the background thread has already exited.
     let _ = self.command_sender.send(Command::Stop);
@@ -180,7 +180,7 @@ fn wait_for_stop(
 /// Repeatedly looks for a compatible device, reads from it until it's lost
 /// (or a stop is requested), then goes back to looking for one - so a
 /// hot-unplugged/replugged device recovers on its own without recreating
-/// [`SpaceMouseLoop`].
+/// [`SpaceMouseThread`].
 fn run<F>(
   connected: &AtomicBool,
   commands: &mpsc::Receiver<Command>,

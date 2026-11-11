@@ -8,7 +8,7 @@
 //!
 //! * [`SpaceMouse`] gives synchronous access to a device: scan for and open
 //!   it, read events, and set its LED. The caller drives it.
-//! * [`SpaceMouseLoop`] runs a [`SpaceMouse`] on a background thread and
+//! * [`SpaceMouseThread`] runs a [`SpaceMouse`] on a background thread and
 //!   delivers [`SpaceMouseEvent`]s to a callback, reconnecting automatically.
 //!
 //! This crate deliberately knows nothing about sensitivity, inversion,
@@ -24,10 +24,10 @@ mod error;
 mod event;
 mod report;
 mod spacemouse;
-mod spacemouse_loop;
+mod thread;
 
 // Re-Exports
 pub use error::SpaceMouseError;
 pub use event::SpaceMouseEvent;
 pub use spacemouse::SpaceMouse;
-pub use spacemouse_loop::SpaceMouseLoop;
+pub use thread::SpaceMouseThread;
