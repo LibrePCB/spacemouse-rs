@@ -31,6 +31,10 @@ fn main() -> Result<(), SpaceMouseError> {
       match mouse.read(Duration::from_millis(200)) {
         Ok(Some(event)) => println!("{event:?}"),
         Ok(None) => {}
+        Err(SpaceMouseError::DeviceLost) => {
+          println!("Disconnected.");
+          break;
+        }
         Err(error) => {
           println!("{error}");
           break;
