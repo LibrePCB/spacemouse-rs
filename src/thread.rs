@@ -37,6 +37,42 @@ enum Command {
 /// connected. A device that is plugged in later, or unplugged and replugged,
 /// is picked up automatically. If the HID subsystem cannot be initialized,
 /// the thread ends immediately and reports nothing.
+///
+/// # Example
+///
+/// Print all events of a connected device until Enter is pressed:
+///
+/// ```no_run
+/// use spacemouse::{SpaceMouseEvent, SpaceMouseThread};
+/// use std::io;
+///
+/// fn on_event_callback(event: SpaceMouseEvent) {
+///   match event {
+///     SpaceMouseEvent::Connected => {
+///       println!("connected");
+///     }
+///     SpaceMouseEvent::Disconnected => {
+///       println!("disconnected");
+///     }
+///     SpaceMouseEvent::Translation { x, y, z } => {
+///       println!("translation: {x} {y} {z}");
+///     }
+///     SpaceMouseEvent::Rotation { x, y, z } => {
+///       println!("rotation: {x} {y} {z}");
+///     }
+///     _ => {}
+///   }
+/// }
+///
+/// // Start the background thread, which automatically connects to the device.
+/// let thread = SpaceMouseThread::new(on_event_callback);
+///
+/// println!("Listening for SpaceMouse events. Press Enter to quit.");
+/// let _ = io::stdin().read_line(&mut String::new());
+///
+/// // Dropping the handle stops the background thread.
+/// drop(thread);
+/// ```
 pub struct SpaceMouseThread {
   /// Whether a compatible device is currently open. Kept outside the
   /// thread so [`SpaceMouseThread::is_connected`] doesn't have to

@@ -33,6 +33,37 @@ const READ_BUF_LEN: usize = 64;
 /// reads events with [`SpaceMouse::read`], and sets the LED with
 /// [`SpaceMouse::set_led`]. See [`SpaceMouseThread`](crate::SpaceMouseThread)
 /// for a layer which does this on a background thread.
+///
+/// # Example
+///
+/// Poll a device and print its translation readings until it is lost:
+///
+/// ```no_run
+/// use spacemouse::{SpaceMouseEvent, SpaceMouse};
+/// use std::time::Duration;
+///
+/// # fn main() -> Result<(), spacemouse::SpaceMouseError> {
+/// let mut mouse = SpaceMouse::new()?;
+///
+/// // Poll for the device, e.g. every second, until it is found.
+/// while !mouse.connect() {
+///   std::thread::sleep(Duration::from_secs(1));
+/// }
+///
+/// // Read events until the device is lost (e.g. unplugged).
+/// loop {
+///   match mouse.read(Duration::from_millis(200))? {
+///     Some(SpaceMouseEvent::Translation { x, y, z }) => {
+///       println!("translation: {x} {y} {z}");
+///     }
+///     Some(SpaceMouseEvent::Rotation { x, y, z }) => {
+///       println!("rotation: {x} {y} {z}");
+///     }
+///     _ => {}
+///   }
+/// }
+/// # }
+/// ```
 pub struct SpaceMouse {
   /// The open device, if any. Declared before `api` so it is dropped first.
   device: Option<hidapi::HidDevice>,
