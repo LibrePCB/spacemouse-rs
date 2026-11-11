@@ -38,7 +38,7 @@ loop {
 
 In addition to this synchronous API, this crate also offers a threaded API which
 handles all the high-level logic and just calls your callback on any event. See
-[`SpaceMouseThread`](https://docs.rs/spacemouse/struct.SpaceMouseThread.html)
+[`SpaceMouseThread`](https://docs.rs/spacemouse/latest/spacemouse/struct.SpaceMouseThread.html)
 for details.
 
 Ready-to-run programs are available in the `examples` directory:

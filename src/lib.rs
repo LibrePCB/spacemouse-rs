@@ -25,7 +25,7 @@
 //! # Linux Device Permissions
 //!
 //! On Linux, `hidraw` device nodes are readable by root only by default. See
-//! [`README.md`](https://github.com/LibrePCB/spacemouse-rs/blob/main/README.md)
+//! [`README.md`](https://github.com/LibrePCB/spacemouse-rs/blob/main/README.md#linux-device-permissions)
 //! for instructions to allow non-root access by installing the provided udev
 //! rule.
 
