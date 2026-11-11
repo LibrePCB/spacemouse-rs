@@ -17,9 +17,6 @@ jobs:
             toolchain: nightly
           - os: windows-2025
             toolchain: stable
-    defaults:
-      run:
-        shell: bash
     steps:
       - uses: actions/checkout@v4
       - name: Install Toolchain
@@ -31,11 +28,11 @@ jobs:
       - name: Test
         run: cargo test --verbose --features="fail-on-warnings"
       - name: Docs
-        run: cargo doc --no-deps --document-private-items --features="fail-on-warnings"
+        run: cargo doc --no-deps --features="fail-on-warnings"
 
   stylecheck:
     runs-on: ubuntu-24.04
-    container: librepcb/librepcb-dev:devtools-4
+    container: librepcb/librepcb-dev:devtools-7
     steps:
       - uses: actions/checkout@v4
       - name: Stylecheck

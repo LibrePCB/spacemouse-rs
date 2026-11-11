@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: spacemouse-rs
-Source: https://github.com/AvetosDesign/spacemouse-rs
+Source: https://github.com/LibrePCB/spacemouse-rs
 
 Files:
  .gitattributes
@@ -13,5 +13,5 @@ Files:
  README.md
  src/**.rs
  udev/*.rules
-Copyright: Avetos Design
+Copyright: Avetos Design and LibrePCB Developers
 License: MIT

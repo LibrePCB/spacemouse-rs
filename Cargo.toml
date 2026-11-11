@@ -1,19 +1,19 @@
 [package]
 name = "spacemouse"
+description = "Cross-platform HID Driver for 3Dconnexion SpaceMouse Devices"
+keywords = ["space", "mouse", "3d", "3dconnexion"]
+categories = ["hardware-support"]
+repository = "https://github.com/LibrePCB/spacemouse-rs"
+documentation = "https://docs.rs/spacemouse/"
+readme = "README.md"
+license = "MIT"
 version = "0.1.0"
 edition = "2021"
-license = "MIT"
-description = "Cross-platform raw HID capture for 3Dconnexion SpaceMouse devices"
-repository = "https://github.com/AvetosDesign/spacemouse-rs"
+rust-version = "1.65"
 exclude = ["/.git*", "/.reuse/", "/.rustfmt.toml", "/CONTRIBUTING.md", "/LICENSES/", "/udev/", "*.sh"]
-
-[lib]
-crate-type = ["lib"]
 
 [features]
 fail-on-warnings = []
 
 [dependencies]
-# Cross-platform HID access
-# Uses hidraw on Linux, IOHIDManager on macOS, and hid.dll on Windows.
 hidapi = { version = "2", default-features = false, features = ["linux-native-basic-udev"] }
