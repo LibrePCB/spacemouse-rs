@@ -241,5 +241,10 @@ fn run<F>(
 
     connected.store(false, Ordering::Relaxed);
     on_event(SpaceMouseEvent::Disconnected);
+
+    // Make sure there is a delay in the reconnect loop, to avoid hot-looping.
+    if wait_for_stop(commands, rescan_interval, &mut desired_led) {
+      return;
+    }
   }
 }
